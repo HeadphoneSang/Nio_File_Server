@@ -36,6 +36,17 @@ public class BasePipeline {
         return socketChannel;
     }
 
+    private void addContext(String id,HandlerContext ctx){
+        this.ctxMap.put(id,ctx);
+        ctx.getHandler().onAdded(ctx);
+    }
+
+    private HandlerContext removeHandlerContext(String id){
+        HandlerContext rmCtx = ctxMap.remove(id);
+        rmCtx.getHandler().onRemoved(rmCtx);
+        return rmCtx;
+    }
+
     public BasePipeline addLast(String id,SimpleHandler<?> handler){
         HandlerContext newCtx = new HandlerContext(this,id,handler);
         if (ctxMap.containsKey(id)){ //replace ctx if existed
@@ -48,8 +59,7 @@ public class BasePipeline {
                 head = newCtx;
             this.tail = newCtx;
         }
-        this.ctxMap.put(id,newCtx);
-        handler.onAdded(newCtx);
+        this.addContext(id,newCtx);
         return this;
     }
 
@@ -81,7 +91,7 @@ public class BasePipeline {
                 tail = newCtx;
             this.head = newCtx;
         }
-        this.ctxMap.put(id,newCtx);
+        this.addContext(id,newCtx);
         return this;
     }
 
@@ -101,7 +111,7 @@ public class BasePipeline {
             if (ctx.equals(tail)) {
                 tail = ctx.getPre();
             }
-            reCtx = ctxMap.remove(id);
+            reCtx = removeHandlerContext(id);
         }
         return reCtx;
     }
@@ -146,7 +156,7 @@ public class BasePipeline {
             tail = newCtx;
         }
         targetCtx.setNext(newCtx);
-        ctxMap.put(id, newCtx);
+        this.addContext(id,newCtx);
         return this;
     }
 

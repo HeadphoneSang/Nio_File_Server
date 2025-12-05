@@ -5,24 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="669af5b3-6db2-4643-ad60-af768215cdb7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/ClientWriteHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/NServer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/PreWriteHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/BasePipeline.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/BufferHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/HandlerContext.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/InitPipeline.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/SimpleHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/StringHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/BasePipeline.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/BasePipeline.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/HandlerContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/HandlerContext.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,6 +107,7 @@
       <workItem from="1762998789462" duration="2787000" />
       <workItem from="1763029486275" duration="6744000" />
       <workItem from="1763865680404" duration="181000" />
+      <workItem from="1764900365545" duration="1402000" />
     </task>
     <servers />
   </component>

@@ -131,4 +131,8 @@ public class HandlerContext {
     public Logger getLogger(){
         return this.pipeline.getLogger();
     }
+
+    public SimpleHandler<?> getHandler(){
+        return this.handler;
+    }
 }
