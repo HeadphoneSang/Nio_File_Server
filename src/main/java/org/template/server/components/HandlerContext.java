@@ -1,15 +1,16 @@
 package org.template.server.components;
 
+import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.template.server.components.handlers.SimpleHandler;
 
 public class HandlerContext {
     private HandlerContext pre;
 
     private HandlerContext next;
 
-    private final SimpleHandler<?> handler;
+    private final SimpleHandler<?,?> handler;
 
     private final BasePipeline pipeline;
 
@@ -19,7 +20,7 @@ public class HandlerContext {
 
     private boolean isWrite;
 
-    public HandlerContext(BasePipeline pipe,String id,SimpleHandler<?> handler,HandlerContext pre,HandlerContext next,boolean isRead,boolean isWrite){
+    public HandlerContext(BasePipeline pipe,String id,SimpleHandler<?,?> handler,HandlerContext pre,HandlerContext next,boolean isRead,boolean isWrite){
         this.id = id;
         this.pipeline = pipe;
         this.handler = handler;
@@ -29,11 +30,11 @@ public class HandlerContext {
         this.isWrite = isWrite;
     }
 
-    public HandlerContext(BasePipeline pipeline,String id,SimpleHandler<?> handler,HandlerContext pre,HandlerContext next){
+    public HandlerContext(BasePipeline pipeline,String id,SimpleHandler<?,?> handler,HandlerContext pre,HandlerContext next){
         this(pipeline,id,handler,pre,next,false,false);
     }
 
-    public HandlerContext(BasePipeline pipeline,String id,SimpleHandler<?> handler){
+    public HandlerContext(BasePipeline pipeline,String id,SimpleHandler<?,?> handler){
         this(pipeline,id,handler,null,null,false,false);
     }
 
@@ -88,8 +89,10 @@ public class HandlerContext {
         HandlerContext nextCtx = next;
         if (nextCtx == null)
             return;
-        while(!nextCtx.isRead)
+        while(nextCtx!=null&&!nextCtx.isRead)
             nextCtx = nextCtx.next;
+        if (nextCtx==null)
+            return;
         nextCtx.fireReadHandler(msg);
     }
 
@@ -104,24 +107,24 @@ public class HandlerContext {
             fireNextReadHandler(msg);
     }
 
-    public void fireWriteHandler(Object msg){
+    public void fireWriteHandler(Object msg,WritePromise promise){
         if (isWrite) {
-            boolean valid = this.handler.channelWrite(this, msg);
+            boolean valid = this.handler.channelWrite(this, promise,msg);
             if (!valid){
                 System.out.println("Handler "+ this.getId() +" is not writable!");
-                fireNextWriteHandler(msg);
+                fireNextWriteHandler(msg,promise);
             }
         }else
-            fireNextWriteHandler(msg);
+            fireNextWriteHandler(msg,promise);
     }
 
-    public void fireNextWriteHandler(Object msg){
-        HandlerContext nextCtx = next;
-        if (nextCtx == null)
+    public void fireNextWriteHandler(Object msg,WritePromise promise){
+        HandlerContext preCtx = pre;
+        if (preCtx == null)
             return;
-        while(!nextCtx.isWrite)
-            nextCtx = nextCtx.next;
-        nextCtx.fireWriteHandler(msg);
+        while(!preCtx.isWrite)
+            preCtx = preCtx.pre;
+        preCtx.fireWriteHandler(msg,promise);
     }
 
     public BasePipeline getPipeline() {
@@ -132,7 +135,65 @@ public class HandlerContext {
         return this.pipeline.getLogger();
     }
 
-    public SimpleHandler<?> getHandler(){
+    public SimpleHandler<?,?> getHandler(){
         return this.handler;
     }
+
+    public void flush(){
+        this.pipeline.flush();
+    }
+
+
+    public WritePromise write(Object msg){
+        HandlerContext nowCtx = this;
+        WritePromise promise = new WritePromise();
+        if (!nowCtx.isWrite){
+            HandlerContext preCtx = pre;
+            while(!preCtx.isWrite)
+                preCtx = preCtx.pre;
+            preCtx.fireWriteHandler(msg,promise);
+        }else{
+            fireWriteHandler(msg,promise);
+        }
+        return promise;
+    }
+
+
+    /**
+     * 尝试往缓冲区写数据，写不进去就先发送一次缓冲区，然后再写
+     * 如果os缓冲区写不进去，多次尝试后，返回false。
+     * @param buffer 要写进缓冲区的buffer
+     * @return 是否成功写进缓冲区
+     */
+//    public boolean write(ByteBuffer buffer){
+//        boolean ans = false;
+//        int stack = 0;
+//        ByteBuffer outBuffer = this.pipeline.getOutBuffer();
+//        while (stack < 10){
+//            if (outBuffer.remaining()>=buffer.remaining()){//还能写进去
+//                outBuffer.put(buffer);
+//                ans = true;
+//                break;
+//            }else{
+//                //写不进缓冲区
+//                int availableLen = outBuffer.remaining();
+//                ByteBuffer subBuffer = buffer.slice();
+//                subBuffer.limit(availableLen);
+//                outBuffer.put(subBuffer);//将写出缓存写满
+//                buffer.position(buffer.position() + availableLen);
+//                int writeLen = outBuffer.position();
+//                int wroteLen = this.pipeline.flushAllBuffer();
+//                if (wroteLen<writeLen){//os缓冲区写不进去所有的内存缓冲区的数据
+//                    outBuffer.compact();
+//                    stack++;
+//                }else{//旧的缓冲区全部写出
+//                    outBuffer.clear();
+//                    //将剩余的写入新的缓冲区
+//                }
+//            }
+//        }
+//        return ans;
+//    }
+
+
 }

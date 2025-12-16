@@ -1,11 +1,10 @@
 package org.template;
 
 import org.template.server.NServer;
-import org.template.server.PreWriteHandler;
 import org.template.server.components.BasePipeline;
-import org.template.server.components.BufferHandler;
-import org.template.server.components.HandlerContext;
-import org.template.server.components.StringHandler;
+import org.template.server.components.handlers.ByteEncodeHandler;
+import org.template.server.components.handlers.DecisionHandler;
+import org.template.server.components.handlers.SimpleBufferDecodeHandler;
 
 import java.io.IOException;
 
@@ -15,9 +14,12 @@ public class Main {
 
         try {
             server.accept(()->{
-                BasePipeline pipeline = new BasePipeline();
-                pipeline.addLast("byte",new BufferHandler()).addLast("string",new StringHandler());
-                pipeline.setCapacity(12);
+                BasePipeline pipeline = new BasePipeline(true,4*1024);
+                pipeline.
+                        addLast("simpleHandler",new SimpleBufferDecodeHandler()).
+                        addLast("encodeHandler",new ByteEncodeHandler()).
+                        addLast("decision",new DecisionHandler());
+                System.out.println(pipeline);
                 return pipeline;
             });
         } catch (IOException e) {

@@ -1,18 +1,27 @@
 package org.template.server.components;
 
 import org.slf4j.Logger;
+import org.template.server.components.handlers.DefaultHandler;
+import org.template.server.components.handlers.SimpleHandler;
+import org.template.server.components.pojo.PromiseEntry;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.util.ArrayDeque;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 public class BasePipeline {
     private final HashMap<String,HandlerContext> ctxMap = new HashMap<>();
 
+    private final ArrayDeque<PromiseEntry<ByteBuffer>> writeQueue = new ArrayDeque<>();
+
+    private PromiseEntry<ByteBuffer> flushTail;
+
     private SocketChannel socketChannel;
     private HandlerContext head;
-
     private HandlerContext tail;
 
     private Logger logger;
@@ -21,7 +30,52 @@ public class BasePipeline {
 
     private boolean direct = false;
 
+    public BasePipeline(boolean isDirect,int inBufferCap){
+        this.direct = isDirect;
+        this.capacity = inBufferCap;
+        DefaultHandler defaultHandler = new DefaultHandler();
+        this.addLast("DefHd",defaultHandler);
+    }
+
     public BasePipeline(){
+
+        this(false,1024*4);
+    }
+
+
+    public void flush(){
+        if (!this.writeQueue.isEmpty()){
+            this.flushTail = this.writeQueue.peekLast();
+        }
+    }
+
+    public void write(ByteBuffer buffer,WritePromise promise){
+        this.writeQueue.addLast(new PromiseEntry<>(buffer,promise));
+    }
+
+    public void doWrite(SelectionKey key) throws IOException {
+        if (flushTail==null)
+            return;
+        if (!this.writeQueue.isEmpty()){
+            PromiseEntry<ByteBuffer> curEntry = this.writeQueue.peekFirst();
+            PromiseEntry<ByteBuffer> preEntry;
+            do{
+                ByteBuffer payload = curEntry.getPayload();
+                int totalLen = payload.remaining();
+                int wroteLen = this.socketChannel.write(payload);
+                if (totalLen>wroteLen){
+                    key.interestOps(key.interestOps() | SelectionKey.OP_WRITE);
+                    return;
+                }else{
+                    this.writeQueue.pollFirst();
+                    curEntry.getPromise().setSuccess0();
+                }
+                preEntry = curEntry;
+                curEntry = this.writeQueue.peekFirst();
+            }while(preEntry!=this.flushTail&&!this.writeQueue.isEmpty());
+            this.flushTail = null;
+            key.interestOps(key.interestOps() & ~SelectionKey.OP_WRITE);
+        }
     }
 
     public void setLogger(Logger logger){
@@ -47,7 +101,7 @@ public class BasePipeline {
         return rmCtx;
     }
 
-    public BasePipeline addLast(String id,SimpleHandler<?> handler){
+    public BasePipeline addLast(String id, SimpleHandler<?,?> handler){
         HandlerContext newCtx = new HandlerContext(this,id,handler);
         if (ctxMap.containsKey(id)){ //replace ctx if existed
             replaceContext(id, newCtx);
@@ -79,7 +133,7 @@ public class BasePipeline {
             oldCtx.getNext().setPre(newCtx);
     }
 
-    public BasePipeline addHead(String id,SimpleHandler<?> handler){
+    public BasePipeline addHead(String id,SimpleHandler<?,?> handler){
         HandlerContext newCtx = new HandlerContext(this,id,handler);
         if (ctxMap.containsKey(id)){ //replace ctx if existed
             replaceContext(id, newCtx);
@@ -120,7 +174,7 @@ public class BasePipeline {
         return ctxMap.get(id);
     }
 
-        public BasePipeline addBefore(String tarId, String id, SimpleHandler<?> newHandler) {
+        public BasePipeline addBefore(String tarId, String id, SimpleHandler<?,?> newHandler) {
         HandlerContext targetCtx = ctxMap.get(tarId);
         HandlerContext newCtx = new HandlerContext(this,id,newHandler);
         if (targetCtx == null) {
@@ -140,7 +194,7 @@ public class BasePipeline {
     }
 
 
-    public BasePipeline addAfter(String tarId, String id,SimpleHandler<?> newHandler) {
+    public BasePipeline addAfter(String tarId, String id,SimpleHandler<?,?> newHandler) {
         HandlerContext newCtx = new HandlerContext(this,id,newHandler);
         HandlerContext targetCtx = ctxMap.get(tarId);
         if (targetCtx == null) {
@@ -185,5 +239,30 @@ public class BasePipeline {
 
     public Logger getLogger() {
         return logger;
+    }
+
+    /**
+     * 触发管道中所有处理器的销毁事件，按照链表顺序执行
+     * 每个处理器先执行删除，然后执行销毁
+     */
+    public void fireInterrupt(){
+        HandlerContext p = head;
+        while(p!=null){
+            removeContext(p.getId());
+            p.getHandler().onDestroy(p);
+            p = p.getNext();
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        HandlerContext curCtx = head;
+        while (curCtx!=null){
+            builder.append(curCtx.getId());
+            builder.append("->");
+            curCtx = curCtx.getNext();
+        }
+        return builder.toString();
     }
 }

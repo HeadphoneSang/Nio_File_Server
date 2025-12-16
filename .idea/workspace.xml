@@ -5,10 +5,34 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="669af5b3-6db2-4643-ad60-af768215cdb7" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/ChannelPromise.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/WritePromise.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/ByteEncodeHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/DecisionHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/DefaultHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/DirectBufferDecodeHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/FileUploadHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/SimpleBufferDecodeHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/BufferPack.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/BytesPack.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/Datapack.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/FileInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/Future.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/ObjPack.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/PromiseEntry.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/PromiseListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/StringPack.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/utils/DecodeUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/utils/EncodeUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/test/writeTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/NServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/NServer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/BasePipeline.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/BasePipeline.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/BufferHandler.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/HandlerContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/HandlerContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/SimpleHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/SimpleHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/StringHandler.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,8 +42,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -56,7 +80,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.template.Main" />
       <module name="NIO-Server-template" />
@@ -70,9 +94,23 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="writeTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.template.test.writeTest" />
+      <module name="NIO-Server-template" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.template.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Main" />
+        <item itemvalue="Application.writeTest" />
       </list>
     </recent_temporary>
   </component>
@@ -107,11 +145,46 @@
       <workItem from="1762998789462" duration="2787000" />
       <workItem from="1763029486275" duration="6744000" />
       <workItem from="1763865680404" duration="181000" />
-      <workItem from="1764900365545" duration="1402000" />
+      <workItem from="1764900365545" duration="5235000" />
+      <workItem from="1765269413017" duration="5926000" />
+      <workItem from="1765353514891" duration="8609000" />
+      <workItem from="1765461039555" duration="1618000" />
+      <workItem from="1765504920598" duration="5357000" />
+      <workItem from="1765513697255" duration="1322000" />
+      <workItem from="1765515084815" duration="758000" />
+      <workItem from="1765518250727" duration="6139000" />
+      <workItem from="1765550152284" duration="1205000" />
+      <workItem from="1765762194894" duration="3275000" />
+      <workItem from="1765768443763" duration="4215000" />
+      <workItem from="1765772969009" duration="696000" />
+      <workItem from="1765782494405" duration="772000" />
+      <workItem from="1765784116081" duration="9382000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/ByteEncodeHandler.java</url>
+          <line>21</line>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
