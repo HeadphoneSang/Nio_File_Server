@@ -1,6 +1,7 @@
 package org.template.server.components;
 
 import org.slf4j.Logger;
+import org.template.server.components.abstracts.Executor;
 import org.template.server.components.handlers.DefaultHandler;
 import org.template.server.components.handlers.SimpleHandler;
 import org.template.server.components.pojo.PromiseEntry;
@@ -10,13 +11,17 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.util.AbstractMap;
 import java.util.ArrayDeque;
 import java.util.HashMap;
+import java.util.Map;
 
 public class BasePipeline {
     private final HashMap<String,HandlerContext> ctxMap = new HashMap<>();
 
     private final ArrayDeque<PromiseEntry<ByteBuffer>> writeQueue = new ArrayDeque<>();
+
+    private final ArrayDeque<Map.Entry<HandlerContext,Executor>> executorQueue = new ArrayDeque<>();
 
     private PromiseEntry<ByteBuffer> flushTail;
 
@@ -264,5 +269,21 @@ public class BasePipeline {
             curCtx = curCtx.getNext();
         }
         return builder.toString();
+    }
+
+    public void registerExecutor(HandlerContext ctx, Executor executor){
+        executorQueue.addLast(new AbstractMap.SimpleEntry<>(ctx,executor));
+    }
+
+    public void doExecutors(){
+        if (executorQueue.isEmpty())
+            return;
+        Map.Entry<HandlerContext, Executor> entry;
+        while (!executorQueue.isEmpty()){
+            entry = executorQueue.poll();
+            HandlerContext ctx = entry.getKey();
+            Executor executor = entry.getValue();
+            executor.run(ctx);
+        }
     }
 }

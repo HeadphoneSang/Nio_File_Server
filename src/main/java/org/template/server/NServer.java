@@ -27,8 +27,6 @@ public class NServer {
     private InitPipeline initPipeHandler;
 
     private Selector selector;
-    private final ExecutorService workerPool =
-            Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
     public NServer(int port){
         this.port = port;
         this.channelMap = new HashMap<>();
@@ -130,6 +128,10 @@ public class NServer {
                     BasePipeline pipe = channelMap.get((SocketChannel) keyEvent.channel());
                     curPipes.add(new AbstractMap.SimpleEntry<>(keyEvent,pipe));
                 }
+            }
+            //处理Executor
+            for (Map.Entry<SelectionKey, BasePipeline> entry : curPipes){
+                entry.getValue().doExecutors();
             }
             //处理io事件
             for (Map.Entry<SelectionKey, BasePipeline> entry : curPipes){

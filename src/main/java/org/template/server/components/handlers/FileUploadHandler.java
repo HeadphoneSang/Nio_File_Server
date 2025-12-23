@@ -16,6 +16,10 @@ public class FileUploadHandler extends SimpleHandler<BufferPack, ObjPack>{
 
     private final File saveDir;
 
+    public File getSaveDir() {
+        return saveDir;
+    }
+
     public FileUploadHandler(String savePath){
         File savePathFile = new File(savePath);
         savePathFile.mkdirs();
@@ -26,12 +30,11 @@ public class FileUploadHandler extends SimpleHandler<BufferPack, ObjPack>{
         this("./saved");
     }
 
-    public boolean createFileIfNot(String fileName){
-        File file = new File(saveDir,fileName);
-        if(file.exists())
+    public boolean createFileIfNot(File tmpFile){
+        if(tmpFile.exists())
             return false;
         try {
-            return file.createNewFile();
+            return tmpFile.createNewFile();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -44,10 +47,20 @@ public class FileUploadHandler extends SimpleHandler<BufferPack, ObjPack>{
     public boolean registerFileUpload(FileInfo fileInfo){
         if (UUID_Map.containsKey(fileInfo.getUuid()))
             return false;
+        File tarFile = new File(saveDir,fileInfo.getFileName());
+        if (tarFile.exists())
+            return false;
         String fileName = fileInfo.getFileName() + ".tmp";
         fileInfo.setFileName(fileName);
         UUID_Map.put(fileInfo.getUuid(),fileInfo);
-        return this.createFileIfNot(fileName);
+        File tmpFile = new File(saveDir,fileName);
+        boolean isNotExist = this.createFileIfNot(tmpFile);
+        if(!isNotExist&&tmpFile.length()!=0){
+            //文件上传过，但是没有上传完
+            fileInfo.setFileSize(tmpFile.length()*-1);
+            return false;
+        }
+        return isNotExist;
     }
 
     @Override

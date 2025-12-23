@@ -3,6 +3,7 @@ package org.template.server.components;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import org.slf4j.Logger;
+import org.template.server.components.abstracts.Executor;
 import org.template.server.components.handlers.SimpleHandler;
 
 public class HandlerContext {
@@ -158,42 +159,9 @@ public class HandlerContext {
         return promise;
     }
 
-
-    /**
-     * 尝试往缓冲区写数据，写不进去就先发送一次缓冲区，然后再写
-     * 如果os缓冲区写不进去，多次尝试后，返回false。
-     * @param buffer 要写进缓冲区的buffer
-     * @return 是否成功写进缓冲区
-     */
-//    public boolean write(ByteBuffer buffer){
-//        boolean ans = false;
-//        int stack = 0;
-//        ByteBuffer outBuffer = this.pipeline.getOutBuffer();
-//        while (stack < 10){
-//            if (outBuffer.remaining()>=buffer.remaining()){//还能写进去
-//                outBuffer.put(buffer);
-//                ans = true;
-//                break;
-//            }else{
-//                //写不进缓冲区
-//                int availableLen = outBuffer.remaining();
-//                ByteBuffer subBuffer = buffer.slice();
-//                subBuffer.limit(availableLen);
-//                outBuffer.put(subBuffer);//将写出缓存写满
-//                buffer.position(buffer.position() + availableLen);
-//                int writeLen = outBuffer.position();
-//                int wroteLen = this.pipeline.flushAllBuffer();
-//                if (wroteLen<writeLen){//os缓冲区写不进去所有的内存缓冲区的数据
-//                    outBuffer.compact();
-//                    stack++;
-//                }else{//旧的缓冲区全部写出
-//                    outBuffer.clear();
-//                    //将剩余的写入新的缓冲区
-//                }
-//            }
-//        }
-//        return ans;
-//    }
+    public void executeTask(Executor executor){
+        pipeline.registerExecutor(this,executor);
+    }
 
 
 }

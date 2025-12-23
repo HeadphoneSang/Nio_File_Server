@@ -2,11 +2,12 @@ package org.template.server.components.handlers;
 
 import org.template.server.components.HandlerContext;
 import org.template.server.components.WritePromise;
-import org.template.server.components.pojo.BufferPack;
-import org.template.server.components.pojo.FileInfo;
-import org.template.server.components.pojo.ObjPack;
-import org.template.server.components.pojo.Datapack;
+import org.template.server.components.pojo.*;
 import org.template.server.utils.DecodeUtils;
+import org.template.server.utils.EncodeUtils;
+
+import java.io.File;
+import java.nio.file.Path;
 
 public class DecisionHandler extends SimpleHandler<ObjPack,ObjPack>{
 
@@ -48,14 +49,38 @@ public class DecisionHandler extends SimpleHandler<ObjPack,ObjPack>{
                 }
                 FileUploadHandler fileUploadHandler = (FileUploadHandler) ctx.getPipeline().getContext("uploadHandler").getHandler();
                 FileInfo fileInfo = DecodeUtils.decodeFileInfo((byte[])msg.getData());
-                fileUploadHandler.registerFileUpload(fileInfo);
-                BufferPack ackPack = new BufferPack(Datapack.Upload_ACK,null);
-                ctx.write(ackPack).addListener((future -> {
-                    if (future.isSuccess()){
-                        System.out.println("发送成功");
+                boolean successReg = fileUploadHandler.registerFileUpload(fileInfo);
+                if (!successReg){
+                    if(fileInfo.getFileSize()<0){
+                        /**
+                         * 处理续传
+                         */
+                        ctx.executeTask(ctx1 -> {
+                            Path tmpPath = new File(fileUploadHandler.getSaveDir(),fileInfo.getFileName()).toPath();
+                            try {
+                                String sha256 = EncodeUtils.sha256(tmpPath);
+                                ctx1.getLogger().info("重传校验，编码服务器半包文件: "+sha256);
+                                StringBufferPack pack = new StringBufferPack(Datapack.ReUpload_ACK,sha256,fileInfo.getFileName(),fileInfo.getFileSize()*-1);
+                                ctx1.write(pack);
+                                ctx1.flush();
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
+                    }else{
+                        /**
+                         * 上传失败
+                          */
                     }
-                }));
-                ctx.flush();
+                }else{
+                    BufferPack ackPack = new BufferPack(Datapack.Upload_ACK,null);
+                    ctx.write(ackPack).addListener((future -> {
+                        if (future.isSuccess()){
+                            System.out.println("发送成功");
+                        }
+                    }));
+                    ctx.flush();
+                }
                 break;
             }
             case Datapack.Upload_Chunk:{
