@@ -1,14 +1,11 @@
 package org.template.server.components.handlers;
 
-import org.template.server.components.HandlerContext;
-import org.template.server.components.WritePromise;
+import org.template.server.components.internals.HandlerContext;
+import org.template.server.components.internals.WritePromise;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
-import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class SimpleHandler<T,K> {
 

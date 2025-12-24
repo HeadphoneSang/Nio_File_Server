@@ -1,4 +1,4 @@
-package org.template.server.components;
+package org.template.server.components.internals;
 
 import org.slf4j.Logger;
 import org.template.server.components.abstracts.Executor;
@@ -9,7 +9,6 @@ import org.template.server.components.pojo.PromiseEntry;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.AbstractMap;
 import java.util.ArrayDeque;
@@ -38,12 +37,9 @@ public class BasePipeline {
     public BasePipeline(boolean isDirect,int inBufferCap){
         this.direct = isDirect;
         this.capacity = inBufferCap;
-        DefaultHandler defaultHandler = new DefaultHandler();
-        this.addLast("DefHd",defaultHandler);
     }
 
     public BasePipeline(){
-
         this(false,1024*4);
     }
 
@@ -220,6 +216,11 @@ public class BasePipeline {
     }
 
     public void fireHandlersFromBegin(SocketChannel channel,ByteBuffer buffer){
+        this.socketChannel = channel;
+        this.head.fireReadHandler(buffer);
+    }
+
+    public void fireHandlersFromBegin(SocketChannel channel,Object buffer){
         this.socketChannel = channel;
         this.head.fireReadHandler(buffer);
     }

@@ -1,6 +1,6 @@
 package org.template.server.components.pojo;
 
-import org.template.server.components.ChannelPromise;
+import org.template.server.components.internals.ChannelPromise;
 
 public class PromiseEntry <T>{
     private final T payload;

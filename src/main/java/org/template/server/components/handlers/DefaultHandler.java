@@ -1,7 +1,7 @@
 package org.template.server.components.handlers;
 
-import org.template.server.components.HandlerContext;
-import org.template.server.components.WritePromise;
+import org.template.server.components.internals.HandlerContext;
+import org.template.server.components.internals.WritePromise;
 
 import java.nio.ByteBuffer;
 

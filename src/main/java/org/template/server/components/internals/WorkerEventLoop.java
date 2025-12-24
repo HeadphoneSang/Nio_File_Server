@@ -1,21 +1,14 @@
-package org.template.server;
-
-import org.template.server.components.BasePipeline;
-import org.template.server.components.InitPipeline;
+package org.template.server.components.internals;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
 import java.util.AbstractMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 public class WorkerEventLoop extends EventLoop{
-    WorkerEventLoop(InitPipeline initPipeHandler) {
-        super(initPipeHandler);
-    }
 
     /***
      * handler read event
@@ -67,18 +60,14 @@ public class WorkerEventLoop extends EventLoop{
     }
 
     @Override
-    protected void loopEpoch(Iterator<SelectionKey> readyEvents, List<Map.Entry<SelectionKey, BasePipeline>> curPipes) {
-        while(readyEvents.hasNext()){
-            SelectionKey keyEvent = readyEvents.next();
-            readyEvents.remove();
-            if(keyEvent.isReadable()){
-                BasePipeline pipe = channelMap.get((SocketChannel) keyEvent.channel());
-                handlerReadEvent(keyEvent,pipe);
-                curPipes.add(new AbstractMap.SimpleEntry<>(keyEvent,pipe));
-            }else if(keyEvent.isWritable()){
-                BasePipeline pipe = channelMap.get((SocketChannel) keyEvent.channel());
-                curPipes.add(new AbstractMap.SimpleEntry<>(keyEvent,pipe));
-            }
+    protected void loopEpoch(SelectionKey keyEvent, List<Map.Entry<SelectionKey, BasePipeline>> curPipes) {
+        if(keyEvent.isReadable()){
+            BasePipeline pipe = channelMap.get((SocketChannel) keyEvent.channel());
+            handlerReadEvent(keyEvent,pipe);
+            curPipes.add(new AbstractMap.SimpleEntry<>(keyEvent,pipe));
+        }else if(keyEvent.isWritable()){
+            BasePipeline pipe = channelMap.get((SocketChannel) keyEvent.channel());
+            curPipes.add(new AbstractMap.SimpleEntry<>(keyEvent,pipe));
         }
     }
 }

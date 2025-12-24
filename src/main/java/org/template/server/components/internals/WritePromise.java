@@ -1,6 +1,4 @@
-package org.template.server.components;
-
-import java.nio.channels.SocketChannel;
+package org.template.server.components.internals;
 
 public class WritePromise extends ChannelPromise{
 

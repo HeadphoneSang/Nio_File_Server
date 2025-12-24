@@ -1,9 +1,8 @@
-package org.template.server.components;
+package org.template.server.components.internals;
 
 import org.template.server.components.pojo.Future;
-import org.template.server.components.pojo.PromiseListener;
+import org.template.server.components.abstracts.PromiseListener;
 
-import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,11 +17,11 @@ public abstract class ChannelPromise {
         return this;
     }
 
-    public abstract void setSuccess();
+    protected abstract void setSuccess();
 
-    public abstract void setFailure();
+    protected abstract void setFailure();
 
-    public void setSuccess0(){
+    protected void setSuccess0(){
         this.setSuccess();
         Future future = new Future();
         future.setSuccess(true);
@@ -31,7 +30,7 @@ public abstract class ChannelPromise {
         }
     }
 
-    public void setFailure0(){
+    protected void setFailure0(){
         this.setFailure();
         Future future = new Future();
         future.setSuccess(false);

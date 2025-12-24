@@ -1,6 +1,5 @@
-package org.template.server.components;
+package org.template.server.components.internals;
 
-import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import org.slf4j.Logger;
 import org.template.server.components.abstracts.Executor;
