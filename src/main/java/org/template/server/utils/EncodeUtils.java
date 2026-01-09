@@ -55,4 +55,15 @@ public class EncodeUtils {
         }
         return sb.toString();
     }
+
+    public static String sha256(ByteBuffer buffer) throws Exception {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        md.update(buffer);
+        byte[] digest = md.digest();
+        StringBuilder sb = new StringBuilder();
+        for (byte b : digest) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
+    }
 }

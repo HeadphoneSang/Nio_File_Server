@@ -10,7 +10,7 @@ public class StringBufferPack extends BufferPack{
     private String sha256;
 
     @ToByte
-    private String fileName;
+    private String uuid;
 
     @ToByte
     private long ackLen;
@@ -18,11 +18,11 @@ public class StringBufferPack extends BufferPack{
     public StringBufferPack(int opCode, ByteBuffer data) {
         super(opCode, data);
     }
-    public StringBufferPack(int opCode,String sha256,String fileName,long ackLen){
+    public StringBufferPack(int opCode,String sha256,String uuid,long ackLen){
         this(opCode,null);
         this.sha256 = sha256;
         this.ackLen = ackLen;
-        this.fileName = fileName;
+        this.uuid = uuid;
         try {
             ByteBuffer buffer = toByteBuffer(true);
             this.setData(buffer);

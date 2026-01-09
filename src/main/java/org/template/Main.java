@@ -11,15 +11,15 @@ public class Main {
     public static void main(String[] args) {
         ServerBootStrap serverBootStrap = new ServerBootStrap();
         BossEventLoopGroup bossGroup = new BossEventLoopGroup(1);
-        WorkerEventLoopGroup workerGroup = new WorkerEventLoopGroup(2);
+        WorkerEventLoopGroup workerGroup = new WorkerEventLoopGroup(4);
         serverBootStrap.group(bossGroup,workerGroup)
                 .localAddress(new InetSocketAddress(25565))
                 .childHandlers(()->{
-                    BasePipeline pipeline = new BasePipeline(true,4*1024);
+                    BasePipeline pipeline = new BasePipeline(true,5*1024*1024);
                     pipeline.
-                        addLast("simpleHandler",new SimpleBufferDecodeHandler()).
-                        addLast("encodeHandler",new ByteEncodeHandler()).
-                        addLast("decision",new DecisionHandler());
+                            addLast("encodeHandler",new ByteEncodeHandler()).
+                            addLast("simpleHandler",new SimpleBufferDecodeHandler()).
+                            addLast("decision",new DecisionHandler());
                     return pipeline;
                 });
         ChannelPromise promise = serverBootStrap.bind();

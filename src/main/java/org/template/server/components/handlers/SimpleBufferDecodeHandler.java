@@ -2,6 +2,7 @@ package org.template.server.components.handlers;
 
 import org.template.server.components.internals.HandlerContext;
 import org.template.server.components.internals.WritePromise;
+import org.template.server.components.pojo.BufferPack;
 import org.template.server.components.pojo.ObjPack;
 import org.template.server.utils.DecodeUtils;
 
@@ -9,7 +10,7 @@ import java.nio.ByteBuffer;
 
 public class SimpleBufferDecodeHandler extends SimpleHandler<ByteBuffer,Object> {
 
-    private final ByteBuffer buffer = ByteBuffer.allocate(1024*1024*5);
+    private ByteBuffer buffer = ByteBuffer.allocate(1024*1024*5);
 
     @Override
     public void write(HandlerContext ctx, WritePromise promise, Object msg) {
@@ -28,9 +29,7 @@ public class SimpleBufferDecodeHandler extends SimpleHandler<ByteBuffer,Object> 
     }
 
     private void readMsg(ByteBuffer src){
-        src.flip();
         this.buffer.put(src);
-        src.compact();
     }
 
 
@@ -42,25 +41,33 @@ public class SimpleBufferDecodeHandler extends SimpleHandler<ByteBuffer,Object> 
 
     @Override
     public void channelRead0(HandlerContext ctx, ByteBuffer msg) {
-        readMsg(msg);
-        this.buffer.flip();
-        byte[] b4 = new byte[4];
-        byte[] b8 = new byte[8];
-        ObjPack datapack;
-        while(this.buffer.remaining() >= 12){
-            this.buffer.mark();
-            this.buffer.get(b4,0,4);
-            int opCode = DecodeUtils.readBEInt(b4);
-            this.buffer.get(b8,0,8);
-            long dataLen = DecodeUtils.readBELong(b8);
-            if (this.buffer.remaining() >= dataLen){
-                byte[] data = new byte[(int) dataLen];
-                this.buffer.get(data,0, (int) dataLen);
-                datapack = new ObjPack(opCode,data);
-                ctx.fireNextReadHandler(datapack);
-            }else{
-                this.buffer.reset();
-                break;
+        while (msg.hasRemaining()){
+            readMsg(msg);
+            this.buffer.flip();
+            byte[] b4 = new byte[4];
+            byte[] b8 = new byte[8];
+            ByteBuffer dataBuffer;
+            while(this.buffer.remaining() >= 12){
+                this.buffer.mark();
+                this.buffer.get(b4,0,4);
+                int opCode = DecodeUtils.readBEInt(b4);
+                this.buffer.get(b8,0,8);
+                int dataLen = (int)DecodeUtils.readBELong(b8);
+                if (this.buffer.remaining() >= dataLen){
+                    //取出当前数据部分的buffer
+                    int markPos = this.buffer.position();
+                    int markLimit = this.buffer.limit();
+                    this.buffer.limit(markPos+dataLen);
+                    dataBuffer = this.buffer.slice();
+                    dataBuffer.asReadOnlyBuffer();
+                    //把buffer的读取位置向前移动，跳过数据部分
+                    this.buffer.position(markPos+dataLen).limit(markLimit);
+                    BufferPack pack = new BufferPack(opCode,dataBuffer);
+                    ctx.fireNextReadHandler(pack);
+                }else{
+                    this.buffer.reset();
+                    break;
+                }
             }
         }
         this.buffer.compact();  //switch write model

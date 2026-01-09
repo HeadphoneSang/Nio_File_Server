@@ -100,7 +100,7 @@ public class HandlerContext {
         if (isRead) {
             boolean valid = this.handler.channelRead(this, msg);
             if (!valid){
-                System.out.println("Handler"+ this.getId() +" is not readable");
+                getPipeline().getLogger().warn("The parameter type does not match the type expected by the Handler: " + getId());
                 fireNextReadHandler(msg);
             }
         }else
@@ -155,6 +155,12 @@ public class HandlerContext {
         }else{
             fireWriteHandler(msg,promise);
         }
+        return promise;
+    }
+
+    public WritePromise writeAndFlush(Object msg){
+        WritePromise promise = write(msg);
+        flush();
         return promise;
     }
 

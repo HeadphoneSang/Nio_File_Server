@@ -19,6 +19,7 @@ public class WorkerEventLoop extends EventLoop{
     private void handlerReadEvent(SelectionKey keyEvent,BasePipeline pipe){
         SocketChannel channel = (SocketChannel) keyEvent.channel();
         ByteBuffer buffer = pipe.allocateBuffer();
+        ByteBuffer channelBuffer;
         int readLen;
         do{
             try {
@@ -37,7 +38,9 @@ public class WorkerEventLoop extends EventLoop{
                 return;
             }
             else if (readLen > 0){
-                pipe.fireHandlersFromBegin(channel,buffer);
+                channelBuffer = buffer.asReadOnlyBuffer();
+                channelBuffer.flip();
+                pipe.fireHandlersFromBegin(channel,channelBuffer);
             }
             buffer.clear();
         }while (readLen > 0);
@@ -52,6 +55,7 @@ public class WorkerEventLoop extends EventLoop{
         pipe.fireInterrupt();
         keyEvent.cancel();
         SocketChannel channel = (SocketChannel) keyEvent.channel();
+        this.channelMap.remove(channel);
         try {
             channel.close();
         } catch (IOException e) {

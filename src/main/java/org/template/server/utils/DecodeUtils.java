@@ -1,9 +1,9 @@
 package org.template.server.utils;
 
-import org.template.server.components.pojo.FileInfo;
+import org.template.server.components.internals.pojo.FileReceiveContext;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 public class DecodeUtils {
 
@@ -24,17 +24,18 @@ public class DecodeUtils {
                 ((long) (b8[7] & 0xff));
     }
 
-    public static FileInfo decodeFileInfo(byte[] data){
-        long fileSize = readBELong(Arrays.copyOfRange(data,0,8));
-        int fileChunks = readBEInt(Arrays.copyOfRange(data,8,12));
-        int uuidLen = readBEInt(Arrays.copyOfRange(data,12,16));
-        int fileNameLen = readBEInt(Arrays.copyOfRange(data,16,20));
-        int begin = 20;
-        byte[] uuidB = Arrays.copyOfRange(data,begin,begin+uuidLen);
-        begin += uuidLen;
-        byte[] fileNameB = Arrays.copyOfRange(data,begin,begin+fileNameLen);
+    public static FileReceiveContext decodeFileInfo(ByteBuffer data){
+        long fileSize = data.getLong();
+        int chunkSize = data.getInt();
+        int totalChunks =data.getInt();
+        int uuidLen = data.getInt();
+        int fileNameLen = data.getInt();
+        byte[] uuidB = new byte[uuidLen];
+        data.get(uuidB,0,uuidLen);
+        byte[] fileNameB = new byte[fileNameLen];
+        data.get(fileNameB,0,fileNameLen);
         String fileName = new String(fileNameB, StandardCharsets.UTF_8);
         String uuid = new String(uuidB,StandardCharsets.UTF_8);
-        return new FileInfo(fileSize,fileChunks,uuid,fileName);
+        return new FileReceiveContext(fileSize,chunkSize,totalChunks,uuid,fileName);
     }
 }

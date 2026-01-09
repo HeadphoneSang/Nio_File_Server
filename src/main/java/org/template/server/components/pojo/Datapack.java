@@ -12,13 +12,42 @@ import java.util.List;
 import java.util.Map;
 
 public class Datapack<T> {
+
+    /**
+     * 建立一个文件上传通道
+     */
     public static final int Upload = 1;
 
+    //
     public static final int Upload_ACK = 5;
 
+    /**
+     * 续传通道建立校验请求
+     */
     public static final int ReUpload_ACK = 6;
 
-    public static final int Upload_Chunk = 4;
+    /**
+     * 上传失败返回给客户端
+     */
+    public static final int UPLOAD_FAIL = 7;
+
+
+    /**
+     * 客户端建立续传的通道
+     */
+    public static final int RE_UPLOAD_EST = 8;
+
+    /**
+     * 上传的文件块帧
+     */
+
+    public static final int Upload_Chunk_SYN = 4;
+
+    public static final int Upload_Chunk_FIN = 9;
+
+    public static final int Upload_Chunk_ACK = 10;
+
+    public static final int Upload_Complete = 11;
 
     public static final int Download = 2;
 

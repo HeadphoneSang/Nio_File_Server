@@ -5,38 +5,35 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="669af5b3-6db2-4643-ad60-af768215cdb7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/AbstractEventLoopGroup.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/BossEventLoop.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/BossEventLoopGroup.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/RegisterChannelPromise.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/ServerBootStrap.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/ServerPromise.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/SimpleThreadFactory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/WorkerEventLoopGroup.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/subHandlers/EstablishUploadHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/subHandlers/ReUploadHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/subHandlers/SimpleSubHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/subHandlers/UploadChunkHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/subHandlers/UploadFailHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/FileChunkPack.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/UploadAckBufferPack.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/UploadChunkAckPack.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/UploadChunkFinPack.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/UploadCompletePack.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/UploadFailBufferPack.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/saved/图床+王一昊+胡兵+程速琦+秦四庆+陈启德.zip.tmp" beforeDir="false" afterPath="$PROJECT_DIR$/saved/图床+王一昊+胡兵+程速琦+秦四庆+陈启德.zip.tmp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/template/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/BossEventLoop.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/ClientWriteHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/EventLoop.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/EventLoop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/NServer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/PreWriteHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/WorkerEventLoop.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/WorkerEventLoop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/BasePipeline.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/BasePipeline.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/ChannelPromise.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/ChannelPromise.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/HandlerContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/HandlerContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/InitPipeline.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/abstracts/InitPipeline.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/WritePromise.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/WritePromise.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/abstracts/Executor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/abstracts/Executor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/ByteEncodeHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/ByteEncodeHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/DecisionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/DecisionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/DefaultHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/DefaultHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/DirectBufferDecodeHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/DirectBufferDecodeHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/FileUploadHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/FileUploadHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/SimpleBufferDecodeHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/SimpleBufferDecodeHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/SimpleHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/SimpleHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/PromiseEntry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/PromiseEntry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/PromiseListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/abstracts/PromiseListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/BasePipeline.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/BasePipeline.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/HandlerContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/HandlerContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/ServerBootStrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/ServerBootStrap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/WorkerEventLoop.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/WorkerEventLoop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/Datapack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/Datapack.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/FileInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/internals/pojo/FileReceiveContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/StringBufferPack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/components/pojo/StringBufferPack.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/utils/DecodeUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/utils/DecodeUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/template/server/utils/EncodeUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/template/server/utils/EncodeUtils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,6 +44,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
+        <option value="AnnotationType" />
         <option value="Class" />
       </list>
     </option>
@@ -178,7 +176,17 @@
       <workItem from="1766545665126" duration="92000" />
       <workItem from="1766545775151" duration="2682000" />
       <workItem from="1766548471999" duration="6492000" />
-      <workItem from="1766564887146" duration="193000" />
+      <workItem from="1766564887146" duration="1792000" />
+      <workItem from="1766626337240" duration="3999000" />
+      <workItem from="1766649387755" duration="2130000" />
+      <workItem from="1766717277050" duration="7001000" />
+      <workItem from="1766997821132" duration="4443000" />
+      <workItem from="1767058054190" duration="11696000" />
+      <workItem from="1767149064183" duration="724000" />
+      <workItem from="1767150743415" duration="11402000" />
+      <workItem from="1767711092090" duration="616000" />
+      <workItem from="1767753907719" duration="10840000" />
+      <workItem from="1767840844920" duration="12065000" />
     </task>
     <servers />
   </component>
@@ -197,11 +205,66 @@
     </option>
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/DirectBufferDecodeHandler.java</url>
+          <line>44</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/DirectBufferDecodeHandler.java</url>
+          <line>73</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/FileUploadHandler.java</url>
+          <line>86</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/subHandlers/EstablishUploadHandler.java</url>
+          <line>30</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/FileUploadHandler.java</url>
+          <line>134</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/FileUploadHandler.java</url>
+          <line>68</line>
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/FileUploadHandler.java</url>
+          <line>52</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/subHandlers/EstablishUploadHandler.java</url>
+          <line>48</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/template/server/components/internals/pojo/FileReceiveContext.java</url>
+          <line>207</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/template/server/components/handlers/subHandlers/EstablishUploadHandler.java</url>
+          <line>53</line>
+          <option name="timeStamp" value="29" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="org.template.server.components.internals.BossEventLoopGroup" memberName="initPipeline" />
         <PinnedItemInfo parentTag="java.lang.ArrayIndexOutOfBoundsException" memberName="cause" />
         <PinnedItemInfo parentTag="java.util.HashMap$Node" memberName="value" />
+        <PinnedItemInfo parentTag="org.template.server.components.internals.HandlerContext" memberName="pipeline" />
       </pinned-members>
     </pin-to-top-manager>
   </component>

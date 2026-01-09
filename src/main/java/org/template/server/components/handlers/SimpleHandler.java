@@ -6,8 +6,14 @@ import org.template.server.components.internals.WritePromise;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class SimpleHandler<T,K> {
+
+    protected static Map<Class<? extends SimpleHandler<?,?>>,Type> T_cache = new HashMap<>();
+
+    protected static Map<Class<? extends SimpleHandler<?,?>>,Type> K_cache = new HashMap<>();
 
 
     public boolean channelRead(HandlerContext ctx, Object msg){
@@ -33,16 +39,24 @@ public abstract class SimpleHandler<T,K> {
     }
 
     public boolean isReadGenericType(Object msg){
-        ParameterizedType pType =  (ParameterizedType) this.getClass().getGenericSuperclass();
-        Type[] types = pType.getActualTypeArguments();
-        Type genType = types[0];
+        Type genType = T_cache.get(getClass());
+        if (genType==null) {
+            ParameterizedType pType = (ParameterizedType) this.getClass().getGenericSuperclass();
+            Type[] types = pType.getActualTypeArguments();
+            genType = types[0];
+            T_cache.put((Class<? extends SimpleHandler<?, ?>>) getClass(),genType);
+        }
         return judge(msg, genType);
     }
 
     public boolean isWriteGenericType(Object msg){
-        ParameterizedType pType =  (ParameterizedType) this.getClass().getGenericSuperclass();
-        Type[] types = pType.getActualTypeArguments();
-        Type genType = types[1];
+        Type genType = K_cache.get(getClass());
+        if (genType==null){
+            ParameterizedType pType =  (ParameterizedType) this.getClass().getGenericSuperclass();
+            Type[] types = pType.getActualTypeArguments();
+            genType = types[1];
+            K_cache.put((Class<? extends SimpleHandler<?, ?>>) getClass(),genType);
+        }
         return judge(msg, genType);
     }
 

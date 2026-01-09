@@ -175,13 +175,14 @@ public class BasePipeline {
         return ctxMap.get(id);
     }
 
-        public BasePipeline addBefore(String tarId, String id, SimpleHandler<?,?> newHandler) {
+    public BasePipeline addBefore(String tarId, String id, SimpleHandler<?,?> newHandler) {
         HandlerContext targetCtx = ctxMap.get(tarId);
         HandlerContext newCtx = new HandlerContext(this,id,newHandler);
         if (targetCtx == null) {
             throw new IllegalArgumentException("Target handler not found: " + tarId);
         }
         HandlerContext prevCtx = targetCtx.getPre();
+        newCtx.setPre(prevCtx);
         newCtx.setNext(targetCtx);
         if (prevCtx != null) {
             prevCtx.setNext(newCtx);
@@ -190,7 +191,7 @@ public class BasePipeline {
             head = newCtx;
         }
         targetCtx.setPre(newCtx);
-        ctxMap.put(id, newCtx);
+        addContext(id,newCtx);
         return this;
     }
 

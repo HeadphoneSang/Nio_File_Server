@@ -3,6 +3,7 @@ package org.template.server.components.internals;
 import org.template.server.components.abstracts.InitPipeline;
 import org.template.server.components.handlers.DefaultHandler;
 import org.template.server.components.handlers.SimpleHandler;
+import sun.misc.Unsafe;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -87,7 +88,11 @@ public class ServerBootStrap {
                  * Todo 处理将任务是否成功分发到工作循环的逻辑
                  */
                 if (future.isNotSuccess()){
-
+                    try {
+                        client.close();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }));
         }
