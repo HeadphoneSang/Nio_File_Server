@@ -54,17 +54,19 @@ public class EstablishUploadHandler implements SimpleSubHandler<BufferPack>{
                     oldState.remPersist();
                     fileUploadHandler.registerFileUpload(fileReceiveContext);
                     //构建帧
-                    byte[] bitMap = oldState.getBitMap();
-                    byte[] uuid = oldState.getUuid().getBytes(StandardCharsets.UTF_8);
-                    int uuidLen = uuid.length;
-                    int bitMapLen = bitMap.length;
-                    ByteBuffer buffer = ByteBuffer.allocateDirect(8+uuidLen+bitMapLen);
-                    buffer.putInt(uuidLen);
-                    buffer.put(uuid);
-                    buffer.putInt(bitMapLen);
-                    buffer.put(bitMap);
-                    rePack = new BufferPack(Datapack.ReUpload_ACK,buffer);
-                }else{
+                    byte[] bitMap = oldState.getBitMap();           // 获取位图数据（表示已接收的数据块状态）
+                    byte[] uuid = oldState.getUuid().getBytes(StandardCharsets.UTF_8);  // 将UUID转换为UTF-8字节数组
+                    int uuidLen = uuid.length;                      // UUID字节数组长度
+                    int bitMapLen = bitMap.length;                  // 位图字节数组长度
+                    ByteBuffer buffer = ByteBuffer.allocateDirect(8+uuidLen+bitMapLen);  // 分配直接内存缓冲区，总大小=4字节UUID长度+UUID数据+4字节位图长度+位图数据
+                    buffer.putInt(uuidLen);                         // 写入UUID长度（4字节整数）
+                    buffer.put(uuid);                               // 写入UUID数据
+                    buffer.putInt(bitMapLen);                       // 写入位图长度（4字节整数）
+                    buffer.put(bitMap);                             // 写入位图数据
+                    buffer.flip();
+                    rePack = new BufferPack(Datapack.ReUpload_ACK,buffer);  // 创建重传确认包
+                }
+                else{
                     rePack = new UploadFailBufferPack(oldState.getUuid());
                 }
                 ctx.writeAndFlush(rePack);

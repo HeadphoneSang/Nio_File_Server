@@ -231,9 +231,16 @@ public class FileReceiveContext {
         return true;
     }
 
+    /**
+     * 获取当前已接收数据块状态的位图字节数组
+     *
+     * @return BitSet转换的字节数组，表示哪些数据块已经被成功接收
+     *         字节数组采用小端序格式存储位图信息
+     */
     public byte[] getBitMap(){
         return receivedChunks.toByteArray();
     }
+
 
     /**
      * 删除自己的持久化记录
