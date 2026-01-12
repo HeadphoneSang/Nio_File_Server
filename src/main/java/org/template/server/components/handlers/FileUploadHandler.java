@@ -126,7 +126,10 @@ public class FileUploadHandler extends SimpleHandler<FileChunkPack, ObjPack>{
     @Override
     public void onDestroy(HandlerContext ctx) {
         for (FileReceiveContext context : UUID_Map.values())
+        {
             context.persistState();
+            FileReceiveContext.addPersist(context.getUuid());
+        }
         ctx.getLogger().info("持久化完成: "+UUID_Map.size());
     }
 
@@ -140,22 +143,25 @@ public class FileUploadHandler extends SimpleHandler<FileChunkPack, ObjPack>{
             String localSha256 = EncodeUtils.sha256(data);
             data.reset();
             String remoteSha256 = fileChunk.getSha256();
-            if (!localSha256.equals(remoteSha256)){
-                ctx.executeTask((ctx1)->{
-                    BufferPack rePack;
-                    if (context.write(fileChunk)){
-                        if (context.complete()) {
-                            rePack = new UploadCompletePack(fileChunk);
-                            context.flushMetaInfo();
-                            unregisterFileUpload(context);
+            if (localSha256.equals(remoteSha256)){
+                BufferPack rePack;
+                if (context.write(fileChunk)){
+                    if (context.complete()) {
+                        rePack = new UploadCompletePack(fileChunk);
+                        context.flushMetaInfo();
+                        try {
+                            context.close();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
                         }
-                        else
-                            rePack = new UploadChunkAckPack(fileChunk);
+                        unregisterFileUpload(context);
                     }
                     else
-                        rePack = new UploadChunkFinPack(fileChunk, UploadChunkFinPack.FinCode.CHUNK_EXISTED);
-                    ctx1.writeAndFlush(rePack);
-                });
+                        rePack = new UploadChunkAckPack(fileChunk);
+                }
+                else
+                    rePack = new UploadChunkFinPack(fileChunk, UploadChunkFinPack.FinCode.CHUNK_EXISTED);
+                ctx.writeAndFlush(rePack);
             }else{
                 BufferPack pack = new UploadChunkFinPack(fileChunk, UploadChunkFinPack.FinCode.CHUNK_INVALID);
                 ctx.writeAndFlush(pack);

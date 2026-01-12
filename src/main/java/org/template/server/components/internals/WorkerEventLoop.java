@@ -39,6 +39,8 @@ public class WorkerEventLoop extends EventLoop{
             }
             else if (readLen > 0){
                 channelBuffer = buffer.asReadOnlyBuffer();
+                // 虽然是更换了引用，但是和buffer的虚拟内存空间是同一个范围，所以当修改buffer的数据时，channelBuffer的内容也会变
+                // 所以管道内对channelBuffer的异步读取，会导致数据丢失，需要管道自己保存一份数据副本
                 channelBuffer.flip();
                 pipe.fireHandlersFromBegin(channel,channelBuffer);
             }

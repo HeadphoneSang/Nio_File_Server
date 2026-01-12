@@ -1,6 +1,7 @@
 package org.template.server.components.internals.pojo;
 
 import org.template.server.components.pojo.FileChunkPack;
+import org.template.server.utils.EncodeUtils;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -53,6 +54,10 @@ public class FileReceiveContext {
         }
     }
 
+    public static void addPersist(String uuid){
+        persistUuidsSet.add(uuid);
+    }
+
     /**
      * 检查这个uuid是否持久化过
      * @param uuid id
@@ -63,9 +68,14 @@ public class FileReceiveContext {
     }
 
     public void close() throws IOException {
-        if (channel!=null)
-            channel.close();
-
+        if (channel != null) {
+            try {
+                channel.force(true);  // 强制将缓冲区数据写入磁盘
+            } finally {
+                channel.close();
+                channel = null;  // 清空引用，帮助GC回收
+            }
+        }
     }
     public FileChannel getChannel() {
         return channel;
@@ -135,6 +145,14 @@ public class FileReceiveContext {
             return false;
         long offset = (long) chunkId * this.chunkSize;
         ByteBuffer data = pack.getData();
+        data.mark();
+        String localSha256 = null;
+        try {
+            localSha256 = EncodeUtils.sha256(data);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        data.reset();
         try {
             channel.position(offset);
             while (data.hasRemaining())
@@ -162,15 +180,16 @@ public class FileReceiveContext {
      * 将原始信息写回磁盘，同时将原名更改
      */
     public void flushMetaInfo(){
-        String tmpAbsPath = this.targetFile.getAbsolutePath();
-        Path metaFile = Paths.get(tmpAbsPath.substring(0,tmpAbsPath.lastIndexOf(".")));
         try {
+            channel.force(true);  // 先强制刷入磁盘
+            String tmpAbsPath = this.targetFile.getAbsolutePath();
+            Path metaFile = Paths.get(tmpAbsPath.substring(0,tmpAbsPath.lastIndexOf(".")));
             Files.move(this.targetPath,metaFile);
-            channel.force(true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
 
     /**
      * 将当前元数据持久化到磁盘文件，id为uuid
